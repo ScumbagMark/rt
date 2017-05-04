@@ -366,15 +366,20 @@ else {
 
             foreach $p (keys %old) {
                 unless (exists $new{$p}) {
+                    my $key = "Email";
+                    $key = "PrincipalId" if $p =~ /^\d+$/;
+
                     ($s, $n) = $ticket->DeleteWatcher(Type => $type,
-                                                      Email => $p);
+                                                      $key => $p);
                     push @msgs, [ $s, $n ];
                 }
             }
             foreach $p (keys %new) {
-                unless ($ticket->IsWatcher(Type => $type, Email => $p)) {
+                my $key = "Email";
+                $key = "PrincipalId" if $p =~ /^\d+$/;
+                unless ($ticket->IsWatcher(Type => $type, $key => $p)) {
                     ($s, $n) = $ticket->AddWatcher(Type => $type,
-                                                   Email => $p);
+                                                   $key => $p);
                     push @msgs, [ $s, $n ];
                 }
             }
